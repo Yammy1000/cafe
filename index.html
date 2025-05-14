@@ -1,131 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vapor Cafe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-start: #1a1a1a;
-      --bg-end: #111111;
-      --card-bg: rgba(255,255,255,0.05);
+      --bg: radial-gradient(circle, #222, #000);
+      --card-bg: rgba(255, 255, 255, 0.05);
       --primary: #61dafb;
       --accent: #925dff;
       --error: #ff6b6b;
       --text: #eaeaea;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      height: 100%; font-family: 'Inter', sans-serif;
-      background: radial-gradient(circle, rgba(34,34,34,1) 0%, rgba(0,0,0,1) 100%);
-      animation: bgAnim 10s ease infinite;
-      overflow: hidden;
-      position: relative;
-    }
-    @keyframes bgAnim {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    /* Loader */
-    .loader-container {
-      position: fixed; inset: 0;
-      background: rgba(20,20,30,0.95);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 100;
-      transition: opacity 0.6s ease;
-    }
-    .loader-container.hidden { opacity: 0; pointer-events: none; }
-    .loader-svg { width: 150px; height: auto; margin-bottom: 1rem; }
-    .spinner-path {
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
-      animation: draw 3s ease-in-out infinite;
-    }
-    @keyframes draw {
-      0% { stroke-dashoffset: 1000; }
-      50% { stroke-dashoffset: 0; }
-      100% { stroke-dashoffset: 1000; }
-    }
-    .page-title {
-      font-size: 2.5rem; font-weight: 600;
-      color: var(--text); text-shadow: 0 2px 8px rgba(0,0,0,0.7);
-    }
-    /* Cards */
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      padding: 2rem; width: 90%; max-width: 400px;
-      transition: transform 0.5s, opacity 0.5s;
-      position: relative;
-      z-index: 10;
-    }
-    /* Center login card */
-    #login-card {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .hidden-card {
-      opacity: 0; transform: scale(0.9); pointer-events: none;
-    }
-    .proxy-card { opacity: 0; pointer-events: none; margin: auto; position: relative; top: 50%; transform: translateY(-50%);} 
-    .proxy-card.active { opacity: 1; pointer-events: all; }
-    .login-card { opacity: 1; }
-    .input-group {
-      position: relative; margin-bottom: 1.5rem;
-    }
-    .input-group input {
-      width: 100%; padding: 1rem 0.5rem 0.5rem;
-      background: transparent; border: none;
-      border-bottom: 2px solid rgba(255,255,255,0.3);
-      color: var(--text); font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-    .input-group input:focus {
-      outline: none; border-color: var(--accent);
-    }
-    .input-group label {
-      position: absolute; top: 0.5rem; left: 0.5rem;
-      font-size: 0.9rem; color: rgba(255,255,255,0.6);
-      pointer-events: none; transition: transform 0.3s, font-size 0.3s;
-    }
-    .input-group input:focus + label,
-    .input-group input:not(:placeholder-shown) + label {
-      transform: translateY(-1.5rem); font-size: 0.8rem; color: var(--accent);
-    }
-    button {
-      background: var(--primary); color: #000; border: none;
-      padding: 0.75rem; border-radius: 8px;
-      font-size: 1rem; font-weight: 500; cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-    button:hover { background: var(--accent); transform: scale(1.02); }
-    .error { color: var(--error); font-size: 0.9rem; text-align: center; height: 1em; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    /* Loader overlay */
+    #loader { position: fixed; inset: 0; background: rgba(20,20,30,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.6s ease; }
+    #loader.hidden { opacity: 0; }
+    .loader-svg { width: 150px; margin-bottom: 1rem; }
+    .spinner-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 3s ease-in-out infinite; }
+    @keyframes draw { 0%,100% { stroke-dashoffset: 1000; } 50% { stroke-dashoffset: 0; } }
+    .title { font-size: 2rem; margin-bottom: 1rem; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
+    /* Card layout */
+    .card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); width: 90%; max-width: 400px; padding: 2rem; opacity: 0; display: none; flex-direction: column; }
+    .visible { display: flex; opacity: 1; }
+    .input-group { position: relative; margin-bottom: 1.5rem; }
+    .input-group input { width: 100%; padding: 1rem 0.5rem 0.5rem; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.3); color: var(--text); transition: border-color .3s; }
+    .input-group input:focus { outline: none; border-color: var(--accent); }
+    .input-group label { position: absolute; top: 0.5rem; left: 0.5rem; color: rgba(255,255,255,0.6); pointer-events: none; transition: transform .3s, font-size .3s, color .3s; }
+    .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label { transform: translateY(-1.5rem); font-size: .8rem; color: var(--accent); }
+    button { width: 100%; padding: .75rem; background: var(--primary); color: #000; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: background .3s; }
+    button:hover { background: var(--accent); }
+    .error { color: var(--error); text-align: center; height: 1em; margin-top: .5rem; }
     .proxy-list { list-style: none; padding: 0; margin-top: 1rem; }
     .proxy-list li { margin-bottom: 1rem; }
-    .proxy-list a {
-      display: block; padding: 0.75rem;
-      background: rgba(255,255,255,0.1); border-radius: 8px;
-      color: var(--primary); text-decoration: none;
-      transition: background 0.3s;
-    }
+    .proxy-list a { display: block; padding: .75rem; background: rgba(255,255,255,0.1); color: var(--primary); text-decoration: none; border-radius: 8px; transition: background .3s; }
     .proxy-list a:hover { background: rgba(255,255,255,0.2); }
   </style>
 </head>
 <body>
-  <div class="loader-container" id="loader">
+  <div id="loader">
     <svg class="loader-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
       <defs><linearGradient id="grad"><stop stop-color="hsl(230,55%,50%)" offset="0"/><stop stop-color="hsl(230,55%,70%)" offset="1"/></linearGradient></defs>
       <path class="spinner-path" d="M311.8279,118.638 C311.8279,118.638 313.6201,288.8889 313.6201,288.8889 313.6201,288.8889 672.0430,333.6918 672.0430,333.6918 672.0430,333.6918 664.8746,60.3943 664.8746,60.3943 664.8746,60.3943 351.2545,115.0538 351.2545,115.0538" fill="none" stroke-width="25" stroke="url(#grad)" stroke-linecap="butt" transform="translate(-91.9355,2.957)"/>
     </svg>
-    <div class="page-title">Vapor Cafe</div>
+    <div class="title">Vapor Cafe</div>
   </div>
 
-  <div class="card login-card hidden-card" id="login-card">
-    <div class="page-title">Vapor Cafe Login</div>
+  <!-- Login Card -->
+  <div id="login-card" class="card">
+    <div class="title">Vapor Cafe Login</div>
     <form id="loginForm" autocomplete="off">
       <div class="input-group">
         <input id="username" type="text" placeholder=" " required />
@@ -140,13 +66,14 @@
     </form>
   </div>
 
-  <div class="card proxy-card" id="proxy-card">
-    <div class="page-title">Vapor Cafe Proxies</div>
+  <!-- Proxy Card -->
+  <div id="proxy-card" class="card">
+    <div class="title">Proxies</div>
     <ul class="proxy-list">
-      <li><a href="https://how2math.valejo.net" target="_blank" rel="noopener">how2math.valejo.net</a></li>
-      <li><a href="https://monogon.valejo.net" target="_blank" rel="noopener">monogon.valejo.net</a></li>
-      <li><a href="https://safty.valejo.net" target="_blank" rel="noopener">safty.valejo.net</a></li>
-      <li><a href="https://vaporcafe.valejo.net" target="_blank" rel="noopener">vaporcafe.valejo.net</a></li>
+      <li><a href="https://how2math.valejo.net" target="_blank">how2math.valejo.net</a></li>
+      <li><a href="https://monogon.valejo.net" target="_blank">monogon.valejo.net</a></li>
+      <li><a href="https://safty.valejo.net" target="_blank">safty.valejo.net</a></li>
+      <li><a href="https://vaporcafe.valejo.net" target="_blank">vaporcafe.valejo.net</a></li>
     </ul>
   </div>
 
@@ -158,12 +85,10 @@
     const errorEl = document.getElementById('loginError');
 
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        loader.classList.add('hidden');
-      }, 3000);
+      setTimeout(() => loader.classList.add('hidden'), 3000);
       loader.addEventListener('transitionend', () => {
         loader.remove();
-        loginCard.classList.remove('hidden-card');
+        loginCard.classList.add('visible');
       });
     });
 
@@ -173,8 +98,8 @@
       const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value;
       if (u === 'admin' && p === 'vapor123') {
-        loginCard.classList.add('hidden-card');
-        setTimeout(() => proxyCard.classList.add('active'), 500);
+        loginCard.classList.remove('visible');
+        setTimeout(() => proxyCard.classList.add('visible'), 500);
       } else {
         errorEl.textContent = 'Invalid username or password';
       }
