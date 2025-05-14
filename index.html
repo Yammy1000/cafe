@@ -15,28 +15,72 @@
       --text: #eaeaea;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    /* Loader overlay */
-    #loader { position: fixed; inset: 0; background: rgba(20,20,30,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.6s ease; }
+    html, body {
+      margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    #loader {
+      position: fixed; inset: 0;
+      background: rgba(20,20,30,0.95);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 1000; transition: opacity 0.6s ease;
+    }
     #loader.hidden { opacity: 0; }
     .loader-svg { width: 150px; margin-bottom: 1rem; }
-    .spinner-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 3s ease-in-out infinite; }
+    .spinner-path {
+      stroke-dasharray: 1000; stroke-dashoffset: 1000;
+      animation: draw 3s ease-in-out infinite;
+    }
     @keyframes draw { 0%,100% { stroke-dashoffset: 1000; } 50% { stroke-dashoffset: 0; } }
+
     .title { font-size: 2rem; margin-bottom: 1rem; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
-    /* Card layout */
-    .card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); width: 90%; max-width: 400px; padding: 2rem; opacity: 0; display: none; flex-direction: column; }
+
+    .card {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: var(--card-bg); border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      width: 90%; max-width: 400px; padding: 2rem;
+      opacity: 0; display: none; flex-direction: column;
+    }
     .visible { display: flex; opacity: 1; }
+
     .input-group { position: relative; margin-bottom: 1.5rem; }
-    .input-group input { width: 100%; padding: 1rem 0.5rem 0.5rem; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.3); color: var(--text); transition: border-color .3s; }
+    .input-group input {
+      width: 100%; padding: 1rem 0.5rem 0.5rem;
+      background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.3);
+      color: var(--text); transition: border-color .3s;
+    }
     .input-group input:focus { outline: none; border-color: var(--accent); }
-    .input-group label { position: absolute; top: 0.5rem; left: 0.5rem; color: rgba(255,255,255,0.6); pointer-events: none; transition: transform .3s, font-size .3s, color .3s; }
-    .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label { transform: translateY(-1.5rem); font-size: .8rem; color: var(--accent); }
-    button { width: 100%; padding: .75rem; background: var(--primary); color: #000; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: background .3s; }
+    .input-group label {
+      position: absolute; top: 0.5rem; left: 0.5rem;
+      color: rgba(255,255,255,0.6); pointer-events: none;
+      transition: transform .3s, font-size .3s, color .3s;
+    }
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      transform: translateY(-1.5rem); font-size: .8rem; color: var(--accent);
+    }
+
+    button {
+      width: 100%; padding: .75rem;
+      background: var(--primary); color: #000;
+      border: none; border-radius: 8px;
+      font-size: 1rem; cursor: pointer;
+      transition: background .3s;
+    }
     button:hover { background: var(--accent); }
     .error { color: var(--error); text-align: center; height: 1em; margin-top: .5rem; }
+
     .proxy-list { list-style: none; padding: 0; margin-top: 1rem; }
     .proxy-list li { margin-bottom: 1rem; }
-    .proxy-list a { display: block; padding: .75rem; background: rgba(255,255,255,0.1); color: var(--primary); text-decoration: none; border-radius: 8px; transition: background .3s; }
+    .proxy-list a {
+      display: block; padding: .75rem;
+      background: rgba(255,255,255,0.1);
+      color: var(--primary); text-decoration: none;
+      border-radius: 8px; transition: background .3s;
+    }
     .proxy-list a:hover { background: rgba(255,255,255,0.2); }
   </style>
 </head>
@@ -51,7 +95,7 @@
 
   <!-- Login Card -->
   <div id="login-card" class="card">
-    <div class="title">Vapor Cafe Login</div>
+    <div class="title">Login for Pro Access</div>
     <form id="loginForm" autocomplete="off">
       <div class="input-group">
         <input id="username" type="text" placeholder=" " required />
@@ -62,6 +106,7 @@
         <label for="password">Password</label>
       </div>
       <button type="submit">Sign In</button>
+      <button type="button" id="guestBtn" style="margin-top:1rem;">Continue as Guest</button>
       <div class="error" id="loginError"></div>
     </form>
   </div>
@@ -69,12 +114,7 @@
   <!-- Proxy Card -->
   <div id="proxy-card" class="card">
     <div class="title">Proxies</div>
-    <ul class="proxy-list">
-      <li><a href="https://how2math.valejo.net" target="_blank">how2math.valejo.net</a></li>
-      <li><a href="https://monogon.valejo.net" target="_blank">monogon.valejo.net</a></li>
-      <li><a href="https://safty.valejo.net" target="_blank">safty.valejo.net</a></li>
-      <li><a href="https://vaporcafe.valejo.net" target="_blank">vaporcafe.valejo.net</a></li>
-    </ul>
+    <ul class="proxy-list"></ul>
   </div>
 
   <script>
@@ -84,6 +124,24 @@
     const form = document.getElementById('loginForm');
     const errorEl = document.getElementById('loginError');
 
+    // Credential tiers
+    const credentials = {
+      pro: {
+        cereal: 'pallidontop1',
+        qbeat: 'beated4!',
+        decibal: 'spaceship',
+        tech: 'quartzz01'
+      }
+    };
+
+    // Proxy lists
+    const proProxies = [
+      { name: 'how2math.valejo.net', url: 'https://how2math.valejo.net' },
+      { name: 'monogon.valejo.net', url: 'https://monogon.valejo.net' },
+      { name: 'safty.valejo.net', url: 'https://safty.valejo.net' }
+    ];
+
+    // Initial loader
     window.addEventListener('load', () => {
       setTimeout(() => loader.classList.add('hidden'), 3000);
       loader.addEventListener('transitionend', () => {
@@ -92,14 +150,44 @@
       });
     });
 
+    function showProxies(proxies, title) {
+      proxyCard.querySelector('.title').textContent = title;
+      const list = proxyCard.querySelector('.proxy-list');
+      list.innerHTML = '';
+      proxies.forEach(p => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = p.url;
+        a.target = '_blank';
+        a.textContent = p.name;
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+      loginCard.classList.remove('visible');
+      setTimeout(() => proxyCard.classList.add('visible'), 500);
+    }
+
+    // Guest (free) tier
+    document.getElementById('guestBtn').addEventListener('click', () => {
+      loginCard.classList.remove('visible');
+      setTimeout(() => {
+        proxyCard.querySelector('.title').textContent = 'Free Weekly Drop';
+        proxyCard.querySelector('.proxy-list').innerHTML = `
+          <li><a href="https://getfit.20pack.com" target="_blank">getfit.20pack.com</a></li>
+        `;
+        proxyCard.classList.add('visible');
+      }, 500);
+    });
+
+    // Login submission
     form.addEventListener('submit', e => {
       e.preventDefault();
       errorEl.textContent = '';
       const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value;
-      if (u === 'admin' && p === 'vapor123') {
-        loginCard.classList.remove('visible');
-        setTimeout(() => proxyCard.classList.add('visible'), 500);
+
+      if (credentials.pro[u] && credentials.pro[u] === p) {
+        showProxies(proProxies, 'Pro Proxies');
       } else {
         errorEl.textContent = 'Invalid username or password';
       }
